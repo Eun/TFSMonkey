@@ -1,0 +1,83 @@
+﻿<Page x:Class="TFSMonkey.Views.ConnectPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:views="clr-namespace:TFSMonkey.Views"
+      xmlns:util="clr-namespace:TFSMonkey.Util"
+      xmlns:tfsCore="clr-namespace:TFSCore;assembly=TFSCore"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:adorners="http://gu.se/Adorners"
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="ConnectPage"
+	  Language="{Binding Language}" >
+
+	<Grid Margin="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<ComboBox Name="cboServers" Grid.Row="0" Margin="0,0,0,5" IsEditable="True" ItemsSource="{Binding Servers}" SelectedItem="{Binding SelectedServer}"
+				  adorners:Watermark.Text="TFS Server Address"
+				  adorners:Watermark.TextStyle="{StaticResource AdornerTextStyle}"
+				  adorners:Watermark.VisibleWhen="Empty">
+			<ComboBox.InputBindings>
+				<KeyBinding Key="Enter" Command="{Binding ServerChanged}" CommandParameter="{Binding ElementName=cboServers, Path=Text}" />
+			</ComboBox.InputBindings>
+		</ComboBox>
+				
+		<views:Spinner Visibility="{Binding IsProjectsWorking, Converter={StaticResource BoolToHiddenConverter}}" Grid.Row="1"></views:Spinner>
+		<ListView
+			Name="lvProjects"
+			Grid.Row="1"
+			ItemsSource="{Binding Projects}"
+			IsSynchronizedWithCurrentItem="True"
+			util:GridViewSort.AutoSort="True"
+			Visibility="{Binding IsProjectsWorking, Converter={StaticResource BoolToVisibleConverter}}">
+			<ListView.View>
+				<GridView>
+					<GridViewColumn Width="Auto" util:GridViewSort.PropertyName="Name">
+						<GridViewColumnHeader HorizontalContentAlignment="Left">
+							<TextBlock Text="Project" Margin="5,0,20,0"/>
+						</GridViewColumnHeader>
+						<GridViewColumn.CellTemplate>
+							<DataTemplate DataType="{x:Type tfsCore:TeamProject}">
+								<Grid>
+									<Grid.InputBindings>
+										<MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.ProjectSelected, RelativeSource={RelativeSource AncestorType=Page}}"/>
+									</Grid.InputBindings>
+									<TextBlock Text="{Binding Name}" />
+								</Grid>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+				</GridView>
+			</ListView.View>
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="SelectionChanged">
+					<i:InvokeCommandAction Command="{Binding ProjectChanged}" CommandParameter="{Binding ElementName=lvProjects, Path=SelectedItem}" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</ListView>
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0" Grid.Row="2">
+			<Button Margin="0" Content="OK" Width="Auto" IsEnabled="{Binding IsProjectSelected}">
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Click">
+						<i:InvokeCommandAction Command="{Binding ProjectSelected}"/>
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+			</Button>
+			<Button Margin="10,0,0,0" Content="Cancel" Width="Auto">
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Click">
+						<i:InvokeCommandAction Command="{Binding ShutdownCommand}"/>
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+			</Button>
+		</StackPanel>
+	</Grid>
+</Page>

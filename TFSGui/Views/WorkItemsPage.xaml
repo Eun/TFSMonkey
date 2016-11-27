@@ -1,0 +1,241 @@
+﻿<UserControl x:Class="TFSMonkey.Views.WorkItemsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:views="clr-namespace:TFSMonkey.Views"
+             xmlns:util="clr-namespace:TFSMonkey.Util"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:adorners="http://gu.se/Adorners"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+			 Language="{Binding Language}">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="1"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<ProgressBar IsIndeterminate="true" Visibility="{Binding IsWorking, Converter={StaticResource BoolToHiddenConverter}}" Background="#ffd5d5d5" BorderBrush="#ffd5d5d5" Height="1" Grid.Row="0" Margin="10,0"></ProgressBar>
+		<Rectangle Visibility="{Binding IsWorking, Converter={StaticResource BoolToVisibleConverter}}" Height="2" Fill="#ffd5d5d5" Grid.Row="0" Margin="10,0"/>
+		<views:Spinner Visibility="{Binding WorkItems.SourceCollection, Converter={StaticResource ItemEmptyToHiddenConverter}}" Grid.Row="2"></views:Spinner>
+		<TextBox
+			Name="txtFilter"
+			Grid.Row="1"
+			Text="{Binding WorkItemSearchTerm, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
+			Visibility="{Binding WorkItems.SourceCollection, Converter={StaticResource ItemEmptyToVisibleConverter}}"
+			adorners:Watermark.Text="Filter..."
+			adorners:Watermark.TextStyle="{StaticResource AdornerTextStyle}"
+			adorners:Watermark.VisibleWhen="Empty"
+			Margin="10,0">
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="TextChanged">
+					<i:InvokeCommandAction Command="{Binding TextBoxTextChanged}" CommandParameter="{Binding ElementName=txtFilter}"/>
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</TextBox>
+		<ListView 
+			ItemsSource="{Binding WorkItems}"
+			Visibility="{Binding WorkItems.SourceCollection, Converter={StaticResource ItemEmptyToVisibleConverter}}"
+			IsSynchronizedWithCurrentItem="True"
+			util:GridViewSort.AutoSort="True"
+			util:GridViewSort.InitialSortProperty="ChangedDate"
+			Grid.Row="2"
+			>
+			<ListView.View>
+				<GridView>
+					<GridViewColumn Width="Auto" util:GridViewSort.PropertyName="State">
+						<GridViewColumnHeader HorizontalContentAlignment="Left">
+							<TextBlock Text="" Margin="0,0,0,0"/>
+						</GridViewColumnHeader>
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<fa:FontAwesome Name="icon" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="{Binding State}" Icon="{Binding StateIcon, Converter={fa:CssClassNameConverter}}" Foreground="{Binding Path=StateColor, Converter={StaticResource ColorToSolidColorBrushValueConverter}}" />
+								<DataTemplate.Triggers>
+									<DataTrigger Binding="{Binding Path=StateIcon, UpdateSourceTrigger=PropertyChanged}" Value="{x:Null}">
+										<Setter TargetName="icon" Property="Visibility" Value="Hidden" />
+									</DataTrigger>
+								</DataTemplate.Triggers>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+
+
+					<GridViewColumn Width="{Binding ColumnWidths[1], Mode=TwoWay}" util:GridViewSort.PropertyName="Id">
+						<GridViewColumnHeader HorizontalContentAlignment="Left">
+							<TextBlock Text="Id" Margin="5,0,20,0"/>
+						</GridViewColumnHeader>
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding Id}" HorizontalAlignment="Left"></TextBlock>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+
+					<GridViewColumn Width="{Binding ColumnWidths[2], Mode=TwoWay}" util:GridViewSort.PropertyName="AssignedTo">
+						<GridViewColumnHeader HorizontalContentAlignment="Left">
+							<TextBlock Text="Assigned To" Margin="5,0,20,0"/>
+						</GridViewColumnHeader>
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding AssignedTo}" HorizontalAlignment="Left"></TextBlock>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+
+					<GridViewColumn Width="{Binding ColumnWidths[3], Mode=TwoWay}" util:GridViewSort.PropertyName="ChangedDate">
+						<GridViewColumnHeader HorizontalContentAlignment="Left">
+							<TextBlock Text="Date" Margin="5,0,20,0"/>
+						</GridViewColumnHeader>
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding ChangedDate, Converter={StaticResource ToRelativeDateStringConverter}}" ToolTip="{Binding ChangedDate, StringFormat=g}" HorizontalAlignment="Left"></TextBlock>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+
+					<GridViewColumn Width="Auto" util:GridViewSort.PropertyName="WorkItemType">
+						<GridViewColumnHeader HorizontalContentAlignment="Left">
+							<TextBlock Text="" Margin="0,0,0,0"/>
+						</GridViewColumnHeader>
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<fa:FontAwesome Name="icon" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTip="{Binding WorkItemType}" Icon="{Binding WorkItemTypeIcon, Converter={fa:CssClassNameConverter}}" Foreground="{Binding Path=WorkItemTypeColor, Converter={StaticResource ColorToSolidColorBrushValueConverter}}"/>
+								<DataTemplate.Triggers>
+									<DataTrigger Binding="{Binding Path=WorkItemTypeIcon, UpdateSourceTrigger=PropertyChanged}" Value="{x:Null}">
+										<Setter TargetName="icon" Property="Visibility" Value="Hidden" />
+									</DataTrigger>
+								</DataTemplate.Triggers>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+
+					<GridViewColumn Width="{Binding ColumnWidths[5], Mode=TwoWay}" util:GridViewSort.PropertyName="Title">
+						<GridViewColumnHeader HorizontalContentAlignment="Left">
+							<TextBlock Text="Title" Margin="5,0,20,0"/>
+						</GridViewColumnHeader>
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding Title, Converter={StaticResource RemoveNewLinesConverter}}" HorizontalAlignment="Left" TextWrapping="NoWrap" ToolTip="{Binding Title}"></TextBlock>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+
+
+					<GridViewColumn Width="{Binding ColumnWidths[6], Mode=TwoWay}" util:GridViewSort.PropertyName="WorkItemType">
+						<GridViewColumnHeader HorizontalContentAlignment="Left">
+							<TextBlock Text="Type" Margin="5,0,20,0"/>
+						</GridViewColumnHeader>
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding WorkItemType}" HorizontalAlignment="Left"></TextBlock>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+
+					<GridViewColumn Width="{Binding ColumnWidths[7], Mode=TwoWay}" util:GridViewSort.PropertyName="State">
+						<GridViewColumnHeader HorizontalContentAlignment="Left">
+							<TextBlock Text="State" Margin="5,0,20,0"/>
+						</GridViewColumnHeader>
+						<GridViewColumn.CellTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding State}" HorizontalAlignment="Left" Grid.Column="1"></TextBlock>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+						
+				</GridView>
+			</ListView.View>
+			<ListView.InputBindings>
+				<KeyBinding Key="F5" Command="{Binding RefreshData}" />
+			</ListView.InputBindings>
+		</ListView>
+		<StatusBar Grid.Row="3" HorizontalAlignment="Stretch">
+
+
+			<ItemsControl ItemsSource="{Binding States}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel Orientation="Horizontal" Margin="0,0,10,0"/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Grid Margin="5,0">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="20"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							<fa:FontAwesome VerticalAlignment="Center" HorizontalAlignment="Center" Icon="{Binding Icon, Converter={fa:CssClassNameConverter}}" Foreground="{Binding Path=Color, Converter={StaticResource ColorToSolidColorBrushValueConverter}}" Grid.Column="0"/>
+							<TextBlock Grid.Column="1">
+								<TextBlock.Text>
+									<Binding Path="Count" StringFormat="{}{0:D}" />
+								</TextBlock.Text>
+							</TextBlock>
+							<Grid.ToolTip>
+								<TextBlock>
+									<TextBlock.Text>
+										<MultiBinding StringFormat="{}{0}: {1:D}">
+											<Binding Path="Name"></Binding>
+											<Binding Path="Count"></Binding>
+										</MultiBinding>
+									</TextBlock.Text>
+								</TextBlock>
+							</Grid.ToolTip>
+						</Grid>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+
+			<ItemsControl ItemsSource="{Binding WorkItemTypes}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel Orientation="Horizontal" Margin="10,0,0,0"/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Grid Margin="5,0">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="20"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							<fa:FontAwesome VerticalAlignment="Center" HorizontalAlignment="Center" Icon="{Binding Icon, Converter={fa:CssClassNameConverter}}" Foreground="{Binding Path=Color, Converter={StaticResource ColorToSolidColorBrushValueConverter}}" Grid.Column="0"/>
+							<TextBlock Grid.Column="1">
+								<TextBlock.Text>
+									<Binding Path="Count" StringFormat="{}{0:D}" />
+								</TextBlock.Text>
+							</TextBlock>
+							<Grid.ToolTip>
+								<TextBlock>
+									<TextBlock.Text>
+										<MultiBinding StringFormat="{}{0}: {1:D}">
+											<Binding Path="Name"></Binding>
+											<Binding Path="Count"></Binding>
+										</MultiBinding>
+									</TextBlock.Text>
+								</TextBlock>
+							</Grid.ToolTip>
+						</Grid>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+			
+			<StatusBarItem HorizontalAlignment="Right">
+				<TextBlock>
+					<TextBlock.Text>
+						<Binding Path="WorkItems.Count" StringFormat="{}{0:D} Workitems"/>
+					</TextBlock.Text>
+				</TextBlock>
+			</StatusBarItem>
+
+
+		</StatusBar>
+		
+	</Grid>
+	<UserControl.InputBindings>
+		<KeyBinding Key="F5" Command="{Binding RefreshData}" />
+	</UserControl.InputBindings>
+</UserControl>
