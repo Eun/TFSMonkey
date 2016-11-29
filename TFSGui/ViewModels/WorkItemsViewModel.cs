@@ -118,34 +118,36 @@ namespace TFSMonkey
 		
 		private void UpdateDetails()
 		{
-			
-			foreach (var state in States)
+			lock (this) // no multiple updates
 			{
-				int count = 0;
-				foreach (IWorkItem workItem in WorkItems)
+				foreach (var state in States)
 				{
-					if (string.Compare(workItem.State, state.Name, StringComparison.InvariantCultureIgnoreCase) == 0 && WorkItemFilter(workItem))
+					int count = 0;
+					foreach (IWorkItem workItem in WorkItems)
 					{
-						++count;
+						if (string.Compare(workItem.State, state.Name, StringComparison.InvariantCultureIgnoreCase) == 0 && WorkItemFilter(workItem))
+						{
+							++count;
+						}
 					}
+					state.Count = count;
 				}
-				state.Count = count;
-			}
 
-			foreach (var state in WorkItemTypes)
-			{
-				int count = 0;
-				foreach (IWorkItem workItem in WorkItems)
+				foreach (var state in WorkItemTypes)
 				{
-					if (string.Compare(workItem.WorkItemType, state.Name, StringComparison.InvariantCultureIgnoreCase) == 0 && WorkItemFilter(workItem))
+					int count = 0;
+					foreach (IWorkItem workItem in WorkItems)
 					{
-						++count;
+						if (string.Compare(workItem.WorkItemType, state.Name, StringComparison.InvariantCultureIgnoreCase) == 0 && WorkItemFilter(workItem))
+						{
+							++count;
+						}
 					}
+					state.Count = count;
 				}
-				state.Count = count;
+				RaisePropertyChanged(nameof(States));
+				RaisePropertyChanged(nameof(WorkItemTypes));
 			}
-			RaisePropertyChanged(nameof(States));
-			RaisePropertyChanged(nameof(WorkItemTypes));
 		}
 		
 		public event PropertyChangedEventHandler PropertyChanged;

@@ -22,6 +22,7 @@ namespace TFSMonkey.Views
 	{
 		public CombinedPage()
 		{
+			DataContext = new CombinedViewModel();
 			InitializeComponent();
 		}
 

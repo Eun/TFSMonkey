@@ -199,20 +199,32 @@ namespace TFSMonkey
 				GetDataFromTfs(null, Int32.MaxValue, true);
 		}
 
+		private bool RefreshScheduled = false;
 
 		public void RefreshData()
 		{
-			if (IsWorking)
+			if (RefreshScheduled)
 			{
-				IsWorkingChanged?.Invoke(this, new IsWorkingEventArgs(true));
 				return;
 			}
+			bool workedBefore = false;
+			while (IsWorking)
+			{
+				RefreshScheduled = true;
+				Debug.WriteLine("Waiting for cancelation");
+				CancellationTokenSource.Cancel();
+				Thread.Sleep(100);
+				workedBefore = true;
+				
+			}
 			IsWorking = true;
-			if (HistoryItems.Any())
+			RefreshScheduled = false;
+			if (HistoryItems.Any() && !workedBefore)
 				GetDataFromTfs(HistoryItems.Max(x => x.ChangeSetId), Int32.MaxValue);
 			else
 				GetDataFromTfs(null, Int32.MaxValue, true);
 			IsWorking = false;
+			
 		}
 
 		public void SaveDataToCache()

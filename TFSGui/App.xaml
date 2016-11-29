@@ -148,7 +148,6 @@
 			<Style x:Key="AdornerTextStyle"
             TargetType="{x:Type TextBlock}">
 				<Setter Property="Foreground" Value="#ffdddddd" />
-				<Setter Property="Opacity" Value="1" />
 				<Setter Property="FontSize" Value="12" />
 				<Setter Property="FontFamily" Value="Segoe UI"/>
 			</Style>

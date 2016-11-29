@@ -7,6 +7,10 @@ View TFS Checkins and Work items quickly.
 
 Changelog
 =========
+1.1.1:
+- Added Version
+- Do a refresh if the user wants it
+
 1.1:
 - Standalone File
 - Save Column Size

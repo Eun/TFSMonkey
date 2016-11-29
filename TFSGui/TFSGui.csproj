@@ -30,7 +30,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <UpdateUrl>https://raw.githubusercontent.com/Eun/TFSMonkey/res/</UpdateUrl>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>8</ApplicationRevision>
+    <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -127,6 +127,7 @@
     <Compile Include="Util\ColorToSolidColorBrushValueConverter.cs" />
     <Compile Include="Util\DateToRelativeDateStringConverter.cs" />
     <Compile Include="Util\FocusExtension.cs" />
+    <Compile Include="Util\HyperlinkExtensions.cs" />
     <Compile Include="Util\StringToBooleanConverter.cs" />
     <Compile Include="Util\RemoveNewLinesConverter.cs" />
     <Compile Include="Util\StringToVisiblityConverter.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Util\GridViewSort.cs" />
     <Compile Include="ViewModels\ConnectViewModel.cs" />
     <Compile Include="ViewModels\ObservableCollectionEx.cs" />
+    <Compile Include="ViewModels\CombinedViewModel.cs" />
     <Compile Include="ViewModels\WorkItemsViewModel.cs" />
     <Compile Include="ViewModels\HistoryViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

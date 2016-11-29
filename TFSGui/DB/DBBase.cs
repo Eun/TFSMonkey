@@ -50,25 +50,28 @@ namespace TFSMonkey.DB
 
 		private static int GetVersion(SqliteConnection sqliteConnection)
 		{
+			int version = 0;
 			try
 			{
+				sqliteConnection.Open();
 				using (var cmd = new SqliteCommand("SELECT `Version` FROM Version WHERE `Id` = 0", sqliteConnection))
 				{
 					using (var rdr = cmd.ExecuteReader())
 					{
 						if (rdr.Read())
 						{
-							return rdr.GetInt32(0);
+							version = rdr.GetInt32(0);
 						}
 					}
 				}
+				sqliteConnection.Close();
 			}
 			catch (Exception e)
 			{
 				Debug.WriteLine(e);
-				return 0;
+				return version;
 			}
-			return 0;
+			return version;
 		}
 
 		public void SaveVersionInfo(SqliteTransaction transaction = null)

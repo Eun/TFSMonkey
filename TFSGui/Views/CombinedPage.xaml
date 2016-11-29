@@ -2,7 +2,8 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:util="clr-namespace:TFSMonkey.Util"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="">
@@ -16,5 +17,26 @@
 				<Frame Source="WorkItemsPage.xaml" NavigationUIVisibility="Hidden"  Navigating="Frame_OnNavigating"></Frame>
 			</TabItem>
 		</TabControl>
+
+		<TextBlock HorizontalAlignment="Right" Margin="0,0,10,10">
+			<Hyperlink NavigateUri="https://github.com/Eun/TFSMonkey" util:HyperlinkExtensions.IsExternal="true">
+				<Hyperlink.Style>
+					<Style TargetType="{x:Type Hyperlink}">
+						<Setter Property="TextBlock.TextDecorations" Value="{x:Null}"/>
+						<Setter Property="FontSize" Value="14"/>
+						<Setter Property="FontFamily" Value="Segoe UI"/>
+						<Setter Property="FontWeight" Value="SemiBold"/>
+						<Setter Property="TextOptions.TextFormattingMode" Value="Ideal"/>
+						<Setter Property="Foreground" Value="#ffa9a9a9"/>
+						<Style.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="Foreground" Value="#ff656565" />
+						</Trigger>
+					</Style.Triggers>
+					</Style>
+				</Hyperlink.Style>
+				<TextBlock Text="{Binding Name}" Margin="0,0,2,0"/><TextBlock Text="{Binding Version}"/>
+			</Hyperlink>
+		</TextBlock>
 	</Grid>
 </Page>
