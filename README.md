@@ -2,7 +2,7 @@
 =========
 View TFS Checkins and Work items quickly.
 
-[![Download](https://raw.githubusercontent.com/Eun/TFSMonkey/master/download.png)](https://github.com/Eun/TFSMonkey/releases/download/1.1/TFSMonkey1.1.zip)
+[![Download](https://raw.githubusercontent.com/Eun/TFSMonkey/master/download.png)](https://github.com/Eun/TFSMonkey/releases/download/1.1.1/TFSMonkey1.1.1.zip)
 
 
 Changelog
