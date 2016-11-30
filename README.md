@@ -7,6 +7,9 @@ View TFS Checkins and Work items quickly.
 
 Changelog
 =========
+1.1.2:
+- Updated Gu.Wpf.Adorners package
+
 1.1.1:
 - Added Version
 - Do a refresh if the user wants it
